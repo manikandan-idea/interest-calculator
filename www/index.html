@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Interest Calculator</title>
+
+    <!-- Content-Security-Policy: everything loads from this package only,
+         nothing from the network — required for a fully offline app. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self';"
+    />
+
+    <!-- All styling is a local file — no CDN / external stylesheet -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- The entire React app (React + ReactDOM + our components) is
+         pre-bundled into a single local file by esbuild at build time.
+         See /src for the source and README.md for the build command. -->
+    <script src="js/app.bundle.js"></script>
+  </body>
+</html>

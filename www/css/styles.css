@@ -1,0 +1,464 @@
+/* ===================================================================
+   Interest Calculator — Stylesheet
+   Design language: an Indian bank "passbook" — a warm paper
+   background, a deep ledger-green for structure/trust, and a muted
+   gold for the rupee/interest accent. Numbers are set with tabular
+   figures so amounts line up like a printed ledger.
+   =================================================================== */
+
+:root {
+  /* --- Color tokens --- */
+  --color-bg: #f6f4ef;
+  --color-surface: #ffffff;
+  --color-ink: #1c2321;
+  --color-ink-muted: #5b6660;
+  --color-primary: #14453d;
+  --color-primary-dark: #0d302a;
+  --color-accent: #b8892f;
+  --color-accent-soft: #f3e6c9;
+  --color-border: #e4dfd3;
+  --color-error: #b3261e;
+  --color-error-bg: #fbeceb;
+
+  /* --- Type tokens --- */
+  --font-display: Georgia, "Times New Roman", "Noto Serif", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+
+  /* --- Layout tokens --- */
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-card: 0 1px 2px rgba(20, 69, 61, 0.06), 0 8px 24px rgba(20, 69, 61, 0.08);
+  --max-width: 960px;
+}
+
+/* --- Reset / base --- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* --- Page shell --- */
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* --- Header --- */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 4px 24px;
+}
+
+.app-header__mark {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-accent-soft);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 4px rgba(20, 69, 61, 0.08);
+}
+
+.app-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  margin: 0 0 2px;
+  color: var(--color-primary-dark);
+  letter-spacing: -0.01em;
+}
+
+.app-header__subtitle {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: 15px;
+}
+
+/* --- Layout: single column on mobile, two columns from tablet up --- */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (min-width: 760px) {
+  .layout {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 24px;
+  }
+
+  .results-card {
+    position: sticky;
+    top: 20px;
+  }
+}
+
+/* --- Card --- */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  border: 1px solid var(--color-border);
+}
+
+@media (min-width: 480px) {
+  .card {
+    padding: 28px;
+  }
+}
+
+/* --- Fields --- */
+.field {
+  margin-bottom: 26px;
+}
+
+.field:last-of-type {
+  margin-bottom: 8px;
+}
+
+.field__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.field__label {
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-primary-dark);
+  margin-bottom: 10px;
+}
+
+.field__badge {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-primary);
+  background: var(--color-accent-soft);
+  border-radius: 999px;
+  padding: 4px 14px;
+  margin-bottom: 10px;
+}
+
+.field__badge--error {
+  color: var(--color-error);
+  background: var(--color-error-bg);
+}
+
+/* Text inputs: large, touch-friendly, clear focus state */
+.text-input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  min-height: 52px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.text-input:focus-visible,
+.text-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(20, 69, 61, 0.15);
+}
+
+.field__input-with-prefix,
+.field__input-with-suffix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field__prefix,
+.field__suffix {
+  position: absolute;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+  pointer-events: none;
+}
+
+.field__prefix {
+  left: 16px;
+}
+
+.field__suffix {
+  right: 16px;
+}
+
+.text-input--with-prefix {
+  padding-left: 34px;
+}
+
+.field__input-with-suffix .text-input {
+  padding-right: 40px;
+}
+
+/* --- Slider (interest rate) --- */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-primary) 0%,
+    var(--color-accent) 100%
+  );
+  margin: 6px 0 6px;
+  cursor: pointer;
+}
+
+.slider:focus-visible {
+  outline: 3px solid rgba(20, 69, 61, 0.35);
+  outline-offset: 3px;
+}
+
+/* Thumb styled like a small coin, echoing the ₹ mark in the header */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--color-accent);
+}
+
+.slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--color-accent);
+}
+
+.slider::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.slider__scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  margin-bottom: 16px;
+}
+
+/* --- Time period row + unit toggle --- */
+.time-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-row .text-input {
+  flex: 1 1 140px;
+}
+
+.unit-toggle {
+  display: flex;
+  flex: 1 1 220px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  gap: 4px;
+}
+
+.unit-toggle__btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.unit-toggle__btn--active {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.unit-toggle__btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --- Validation messages --- */
+.validation-message {
+  margin: 8px 0 0;
+  color: var(--color-error);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* --- Reset button --- */
+.reset-btn {
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 16px;
+  min-height: 48px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.reset-btn:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.reset-btn:focus-visible {
+  outline: 3px solid rgba(20, 69, 61, 0.35);
+  outline-offset: 2px;
+}
+
+/* --- Results card / "passbook" --- */
+.results-card__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin: 0 0 18px;
+  color: var(--color-primary-dark);
+}
+
+.results-card__empty {
+  color: var(--color-ink-muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.passbook {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 6px 18px;
+}
+
+.passbook__row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.passbook__row:last-child {
+  border-bottom: none;
+}
+
+.passbook__label {
+  color: var(--color-ink-muted);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.passbook__dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--color-border);
+  margin-bottom: 4px;
+}
+
+.passbook__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.passbook__divider {
+  height: 2px;
+  background: var(--color-primary);
+  opacity: 0.15;
+  margin: 4px 0;
+}
+
+.passbook__row--total .passbook__label,
+.passbook__row--total .passbook__value {
+  color: var(--color-primary-dark);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* --- Footer --- */
+.app-footer {
+  text-align: center;
+  color: var(--color-ink-muted);
+  font-size: 13px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Large-tablet / desktop refinements --- */
+@media (min-width: 1024px) {
+  .page {
+    padding-top: 36px;
+  }
+}
